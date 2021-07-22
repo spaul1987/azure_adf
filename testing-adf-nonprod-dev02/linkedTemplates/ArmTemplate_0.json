@@ -60,12 +60,20 @@
 					"referenceName": "ls_copy_activity",
 					"type": "LinkedServiceReference"
 				},
+				"parameters": {
+					"File_name": {
+						"type": "string"
+					}
+				},
 				"annotations": [],
 				"type": "Binary",
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobStorageLocation",
-						"fileName": "campus.jpg",
+						"fileName": {
+							"value": "@dataset().File_name",
+							"type": "Expression"
+						},
 						"container": "azureadf"
 					}
 				}
@@ -120,7 +128,12 @@
 							{
 								"referenceName": "DS_copy_activity",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"File_name": {
+										"value": "@pipeline().parameters.Source_file",
+										"type": "Expression"
+									}
+								}
 							}
 						],
 						"outputs": [
@@ -132,6 +145,12 @@
 						]
 					}
 				],
+				"parameters": {
+					"Source_file": {
+						"type": "string",
+						"defaultValue": "keys.txt"
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
