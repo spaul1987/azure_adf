@@ -1,0 +1,9 @@
+{
+	"name": "testing-adf-nonprod-dev02",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "123c65e9-d4a3-4ec1-ac6d-57c9b0270b0d",
+		"tenantId": "a7af3f01-1007-4135-9311-c3889676bce8"
+	}
+}
