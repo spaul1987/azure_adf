@@ -61,7 +61,7 @@
 		"parameters": {
 			"Source_file": {
 				"type": "string",
-				"defaultValue": "keys.txt"
+				"defaultValue": "welcome.mp4"
 			}
 		},
 		"annotations": []
