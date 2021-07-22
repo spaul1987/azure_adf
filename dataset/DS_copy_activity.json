@@ -5,12 +5,20 @@
 			"referenceName": "ls_copy_activity",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"File_name": {
+				"type": "string"
+			}
+		},
 		"annotations": [],
 		"type": "Binary",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "campus.jpg",
+				"fileName": {
+					"value": "@dataset().File_name",
+					"type": "Expression"
+				},
 				"container": "azureadf"
 			}
 		}

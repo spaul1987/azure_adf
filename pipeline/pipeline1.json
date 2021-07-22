@@ -52,6 +52,12 @@
 				]
 			}
 		],
+		"parameters": {
+			"Source_file": {
+				"type": "string",
+				"defaultValue": "keys.txt"
+			}
+		},
 		"annotations": []
 	}
 }
