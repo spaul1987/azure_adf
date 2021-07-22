@@ -41,7 +41,13 @@
 				"inputs": [
 					{
 						"referenceName": "DS_copy_activity",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"File_name": {
+								"value": "@pipeline().parameters.Source_file",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
