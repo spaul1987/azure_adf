@@ -1,0 +1,18 @@
+{
+	"name": "DS_copy_activity",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_copy_activity",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "campus.jpg",
+				"container": "azureadf"
+			}
+		}
+	}
+}
