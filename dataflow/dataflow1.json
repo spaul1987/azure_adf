@@ -5,16 +5,20 @@
 		"typeProperties": {
 			"sources": [
 				{
-					"dataset": {
-						"referenceName": "DS_CSV_File",
-						"type": "DatasetReference"
+					"linkedService": {
+						"referenceName": "CSVFIle_Linkedservice",
+						"type": "LinkedServiceReference"
 					},
 					"name": "source1"
 				}
 			],
 			"sinks": [],
-			"transformations": [],
-			"script": "source(output(\n\t\tColumn_1 as string,\n\t\tColumn_2 as string,\n\t\tColumn_3 as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tignoreNoFilesFound: false) ~> source1"
+			"transformations": [
+				{
+					"name": "Filter1"
+				}
+			],
+			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tignoreNoFilesFound: false,\n\tformat: 'delimited',\n\tcontainer: 'azureadf',\n\tfileName: 'test.csv',\n\tcolumnDelimiter: ',',\n\tescapeChar: '\\\\',\n\tquoteChar: '\\\"',\n\tcolumnNamesAsHeader: false) ~> source1\nsource1 filter(ERROR_FUNCTION('')) ~> Filter1"
 		}
 	}
 }
