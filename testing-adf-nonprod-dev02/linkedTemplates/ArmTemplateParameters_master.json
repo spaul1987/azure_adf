@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "testing-adf-nonprod-dev02"
 		},
+		"CSVFIle_Linkedservice_connectionString": {
+			"value": ""
+		},
 		"ls_copy_activity_connectionString": {
 			"value": ""
 		},

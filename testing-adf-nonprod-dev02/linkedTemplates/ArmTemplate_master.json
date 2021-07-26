@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "testing-adf-nonprod-dev02"
 		},
+		"CSVFIle_Linkedservice_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'CSVFIle_Linkedservice'"
+		},
 		"ls_copy_activity_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'ls_copy_activity'"
@@ -37,6 +41,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"CSVFIle_Linkedservice_connectionString": {
+						"value": "[parameters('CSVFIle_Linkedservice_connectionString')]"
 					},
 					"ls_copy_activity_connectionString": {
 						"value": "[parameters('ls_copy_activity_connectionString')]"
