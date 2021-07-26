@@ -12,13 +12,21 @@
 					"name": "source1"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "DelimitedText3",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "Filter1"
 				}
 			],
-			"script": "source(output(\n\t\t{Emp Name} as string,\n\t\t{Emp ID} as string,\n\t\tRole as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tignoreNoFilesFound: false) ~> source1\nsource1 filter(equals({Emp ID},'1')) ~> Filter1"
+			"script": "source(output(\n\t\t{Emp Name} as string,\n\t\t{Emp ID} as string,\n\t\tRole as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tignoreNoFilesFound: false) ~> source1\nsource1 filter(equals({Emp ID},'1')) ~> Filter1\nFilter1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true) ~> sink1"
 		}
 	}
 }
