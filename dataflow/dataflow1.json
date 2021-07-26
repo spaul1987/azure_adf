@@ -5,9 +5,9 @@
 		"typeProperties": {
 			"sources": [
 				{
-					"linkedService": {
-						"referenceName": "CSVFIle_Linkedservice",
-						"type": "LinkedServiceReference"
+					"dataset": {
+						"referenceName": "DelimitedText2",
+						"type": "DatasetReference"
 					},
 					"name": "source1"
 				}
@@ -18,7 +18,7 @@
 					"name": "Filter1"
 				}
 			],
-			"script": "source(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tignoreNoFilesFound: false,\n\tformat: 'delimited',\n\tcontainer: 'azureadf',\n\tfileName: 'test.csv',\n\tcolumnDelimiter: ',',\n\tescapeChar: '\\\\',\n\tquoteChar: '\\\"',\n\tcolumnNamesAsHeader: false) ~> source1\nsource1 filter(ERROR_FUNCTION('')) ~> Filter1"
+			"script": "source(output(\n\t\t{Emp Name} as string,\n\t\t{Emp ID} as string,\n\t\tRole as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tignoreNoFilesFound: false) ~> source1\nsource1 filter(equals({Emp ID},'1')) ~> Filter1"
 		}
 	}
 }
