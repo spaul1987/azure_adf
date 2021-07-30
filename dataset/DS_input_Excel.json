@@ -1,0 +1,30 @@
+{
+	"name": "DS_input_Excel",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureBlobStorage1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "Tabelle1",
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": "test_exist.xlsx",
+				"container": "azureadf"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": [
+			{
+				"name": "Emp ID",
+				"type": "String"
+			},
+			{
+				"name": "Role",
+				"type": "String"
+			}
+		]
+	}
+}
