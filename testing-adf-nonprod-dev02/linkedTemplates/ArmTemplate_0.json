@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "testing-adf-nonprod-dev02"
 		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
 		"CSVFIle_Linkedservice_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'CSVFIle_Linkedservice'"
@@ -20,6 +24,19 @@
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzureBlobStorage1_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
 		{
 			"name": "[concat(parameters('factoryName'), '/CSVFIle_Linkedservice')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -122,6 +139,41 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DS_input_Excel')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Excel",
+				"typeProperties": {
+					"sheetName": "Tabelle1",
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "test_exist.xlsx",
+						"container": "azureadf"
+					},
+					"firstRowAsHeader": true
+				},
+				"schema": [
+					{
+						"name": "Emp ID",
+						"type": "String"
+					},
+					{
+						"name": "Role",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DelimitedText2')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -210,6 +262,13 @@
 								"type": "DatasetReference"
 							},
 							"name": "source2"
+						},
+						{
+							"dataset": {
+								"referenceName": "DS_input_Excel",
+								"type": "DatasetReference"
+							},
+							"name": "Sourceexist"
 						}
 					],
 					"sinks": [
@@ -229,14 +288,15 @@
 							"name": "Join1"
 						},
 						{
-							"name": "ConditionalSplit1"
+							"name": "Exists1"
 						}
 					],
-					"script": "source(output(\n\t\t{Emp Name} as string,\n\t\t{Emp ID} as string,\n\t\tRole as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tignoreNoFilesFound: false) ~> source1\nsource(output(\n\t\t{Emp Name} as string,\n\t\t{Emp ID} as string,\n\t\tRole as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tignoreNoFilesFound: false) ~> source2\nsource1 aggregate(groupBy({Emp Name}),\n\tCount = count()) ~> Aggregate1\nAggregate1, source2 join(Aggregate1@{Emp Name} == source2@{Emp Name},\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join1\nJoin1 split(Count > 1,\n\tdisjoint: true) ~> ConditionalSplit1@(True, other)\nConditionalSplit1@True sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Test_Check.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1"
+					"script": "source(output(\n\t\t{Emp Name} as string,\n\t\t{Emp ID} as string,\n\t\tRole as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tignoreNoFilesFound: false) ~> source1\nsource(output(\n\t\t{Emp Name} as string,\n\t\t{Emp ID} as string,\n\t\tRole as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tignoreNoFilesFound: false) ~> source2\nsource(output(\n\t\t{Emp ID} as string,\n\t\tRole as string\n\t),\n\tallowSchemaDrift: true,\n\tvalidateSchema: false,\n\tlimit: 100,\n\tignoreNoFilesFound: false) ~> Sourceexist\nsource1 aggregate(groupBy({Emp Name}),\n\tCount = count()) ~> Aggregate1\nAggregate1, source2 join(Aggregate1@{Emp Name} == source2@{Emp Name},\n\tjoinType:'inner',\n\tbroadcast: 'auto')~> Join1\nJoin1, Sourceexist exists(source2@{Emp ID} == Sourceexist@{Emp ID}\n\t&& source2@Role == Sourceexist@Role,\n\tnegate:true,\n\tbroadcast: 'auto')~> Exists1\nExists1 sink(allowSchemaDrift: true,\n\tvalidateSchema: false,\n\tpartitionFileNames:['Test_Check.csv'],\n\tskipDuplicateMapInputs: true,\n\tskipDuplicateMapOutputs: true,\n\tpartitionBy('hash', 1)) ~> sink1"
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/DelimitedText2')]",
+				"[concat(variables('factoryId'), '/datasets/DS_input_Excel')]",
 				"[concat(variables('factoryId'), '/datasets/DelimitedText3')]"
 			]
 		},
@@ -370,6 +430,7 @@
 								"datasetParameters": {
 									"source1": {},
 									"source2": {},
+									"Sourceexist": {},
 									"sink1": {}
 								}
 							},

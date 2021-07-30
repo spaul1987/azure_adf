@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "testing-adf-nonprod-dev02"
 		},
+		"AzureBlobStorage1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
+		},
 		"CSVFIle_Linkedservice_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'CSVFIle_Linkedservice'"
@@ -41,6 +45,9 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					},
+					"AzureBlobStorage1_connectionString": {
+						"value": "[parameters('AzureBlobStorage1_connectionString')]"
 					},
 					"CSVFIle_Linkedservice_connectionString": {
 						"value": "[parameters('CSVFIle_Linkedservice_connectionString')]"
