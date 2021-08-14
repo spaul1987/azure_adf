@@ -1,0 +1,9 @@
+{
+	"name": "azure-adf-nonprod-test",
+	"location": "eastus",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "0e8b91ab-0624-47f0-8d99-eabbd959188d",
+		"tenantId": "b184c625-7fbc-4ffc-9e66-03c679cc1bdd"
+	}
+}
